@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ChevronDown, ChevronUp, Clock, MessageCircle, Plus, Trash2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import AskEddyChat from "@/components/AskEddyChat";
+import SampleOutlinePopup from "@/components/SampleOutlinePopup";
 
 interface BodyParagraph {
   id: string;
@@ -254,17 +255,44 @@ const Index = () => {
             {/* Step 2: Outline */}
             {currentStep === 2 && (
               <div className="grid grid-cols-2 gap-8">
-                {/* Left Column - Question */}
-                <Card className="bg-white shadow-lg border-0">
-                  <CardHeader className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
-                    <CardTitle className="text-xl">Question | #12345678</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-6">
-                    <p className="text-gray-700 leading-relaxed">
-                      Some people think that children should start school at a very early age, but others believe that they should not go to school until they are older. Discuss both these views and give your opinion.
-                    </p>
-                  </CardContent>
-                </Card>
+                {/* Left Column - Question + Analysis */}
+                <div className="space-y-4">
+                  <Card className="bg-white shadow-lg border-0">
+                    <CardHeader className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+                      <CardTitle className="text-xl">Question | #12345678</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <p className="text-gray-700 leading-relaxed mb-4">
+                        Some people think that children should start school at a very early age, but others believe that they should not go to school until they are older. Discuss both these views and give your opinion.
+                      </p>
+                      
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowOutlineDetails(!showOutlineDetails)}
+                        className="mb-4"
+                      >
+                        {showOutlineDetails ? 'Hide' : 'View'} Question Analysis
+                        {showOutlineDetails ? <ChevronUp className="w-4 h-4 ml-2" /> : <ChevronDown className="w-4 h-4 ml-2" />}
+                      </Button>
+
+                      {showOutlineDetails && (
+                        <div className="p-4 bg-blue-50 rounded-lg">
+                          <h4 className="font-semibold text-blue-900 mb-3">Step 1: Understanding</h4>
+                          <div className="space-y-2 text-sm text-blue-800">
+                            <p><strong>Topic:</strong> Children's school starting age</p>
+                            <p><strong>Task:</strong> Discuss both views + give opinion</p>
+                            <p><strong>Structure:</strong> Introduction → Body 1 (early start) → Body 2 (later start) → Opinion → Conclusion</p>
+                            <p><strong>Key words:</strong> early age, older, discuss both views, your opinion</p>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="mt-4">
+                        <SampleOutlinePopup />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
 
                 {/* Right Column - Outline Form */}
                 <Card className="bg-white shadow-lg border-0">
@@ -473,31 +501,9 @@ const Index = () => {
           {/* Ask Eddy Panel */}
           {showAskEddy && (
             <div className="col-span-3">
-              <Card className="bg-white shadow-lg border-0 sticky top-24">
-                <CardHeader className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-                  <CardTitle className="text-lg flex items-center">
-                    <MessageCircle className="w-5 h-5 mr-2" />
-                    Ask Eddy
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-4">
-                  <div className="space-y-4">
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-sm text-gray-600">
-                        Hi! I'm Eddy, your AI writing assistant. How can I help you with your IELTS essay?
-                      </p>
-                    </div>
-                    <Textarea
-                      placeholder="Ask me anything about your essay..."
-                      className="resize-none"
-                      rows={3}
-                    />
-                    <Button className="w-full bg-purple-500 hover:bg-purple-600">
-                      Send
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="sticky top-24">
+                <AskEddyChat onClose={() => setShowAskEddy(false)} />
+              </div>
             </div>
           )}
         </div>
